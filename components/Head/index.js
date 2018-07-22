@@ -73,6 +73,9 @@ const Head = (props) => (
     <meta name="msapplication-TileColor" content="#fff" />
 
     <meta name="theme-color" content="#3f51b5" />
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200" rel="stylesheet" />
+
   </NextHead>
 )
 

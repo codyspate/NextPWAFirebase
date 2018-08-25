@@ -5,8 +5,9 @@ import axios from 'axios';
 import Card from '../components/Card'
 import uuid from 'uuid'
 import CenterLayout from '../components/CenterLayout'
+import LinkNewFeed from '../components/LinkNewFeed';
 
-export default class index extends Component {
+export default class extends Component {
   static propTypes = {
     posts: PropTypes.object.isRequired
   }
@@ -45,6 +46,7 @@ export default class index extends Component {
             />
           ))}
         </CenterLayout>
+        <LinkNewFeed />
       </React.Fragment>
     )
   }

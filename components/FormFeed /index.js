@@ -10,12 +10,15 @@ import reverseGeocoding from '../../utils/reverseGeocoding';
 import axios from 'axios';
 import FileInput from '../FileInput';
 
-
 export class FormFeed extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      lat: null,
+      lng: null,
+      file: null,
+      loadingRequest: false,
       supportMedia: true,
       loadingLocation: false,
       locationSupport: true,
@@ -66,11 +69,12 @@ export class FormFeed extends Component {
   handleDetectLocation = () => {
     this.setState({ loadingLocation: true }, () => {
       navigator.geolocation.getCurrentPosition(position => {
+        this.setState({ lat: position.coords.longitude, lng: position.coords.latitude })
         reverseGeocoding(position.coords.latitude, position.coords.longitude)
           .then(res => {
-            if ('results' in res && res.results.length) {
-              const formatted_address = res.results[0].formatted_address // 7277 Bedford Avenue, Brooklyn, NY 11211, USA
-
+            if (res.status === 200 && res.data.status === 'OK'
+              && 'results' in res.data && res.data.results.length) {
+              const formatted_address = res.data.results[0].formatted_address // 7277 Bedford Avenue, Brooklyn, NY 11211, USA
               this.inputChanged({
                 target: {
                   value: formatted_address
@@ -105,19 +109,70 @@ export class FormFeed extends Component {
     }
   }
 
+  handleOnSubmit = event => {
+    event.preventDefault();
+    this.setState({
+      loadingRequest: true
+    }, () => {
+      const id = new Date().toISOString();
+      const FormDataFeed = new FormData();
+
+      FormDataFeed.append('id', id);
+      FormDataFeed.append('title', this.state.controls.title.value);
+      FormDataFeed.append('location', this.state.controls.location.value);
+      FormDataFeed.append('rawLocationLat', this.state.lat);
+      FormDataFeed.append('rawLocationLng', this.state.lng);
+      FormDataFeed.append('file', this.state.file, id + '.png');
+      axios.post('https://us-central1-pwagram-7decd.cloudfunctions.net/storePostData', FormDataFeed, {
+        config: {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      }).then(res => {
+        console.log('Cool!', res);
+        this.setState({ loadingRequest: false }, () => {
+          this.props.onSubmitCallBack()
+        })
+      }).catch(err => {
+        console.log(err);
+        this.setState({ loadingRequest: false })
+      })
+    })
+  }
+
+  handleOnChangeFile = (_, file) => {
+    this.setState({ file: file })
+  }
+
   render() {
     const {
       handleDetectLocation,
       handleTryShowCamera,
       handleFallbackCameraFail,
+      handleOnChangeFile,
+      handleOnSubmit,
       state: {
         controls,
+        file,
         loadingLocation,
         locationSupport,
         tryShowCamera,
-        showFileInput
+        showFileInput,
+        loadingRequest
       }
     } = this
+
+    let disabled = false
+
+    if (!controls.title.value) {
+      disabled = true
+    } else if (!controls.location.value) {
+      disabled = true
+    } else if (!file) {
+      disabled = true
+    }
+
     return (
       <React.Fragment>
         <form className='FormFeed'>
@@ -151,7 +206,7 @@ export class FormFeed extends Component {
             {
               showFileInput && (
                 <InputField>
-                  <FileInput />
+                  <FileInput onChange={handleOnChangeFile} />
                 </InputField>
               )
             }
@@ -186,7 +241,7 @@ export class FormFeed extends Component {
           />
           <InputField>
             {locationSupport ? loadingLocation ? <Spinner /> : (
-              <Button type='submit' onClick={handleDetectLocation}>
+              <Button type='button' onClick={handleDetectLocation}>
                 Detect Location
               </Button>
             ) : null
@@ -194,9 +249,18 @@ export class FormFeed extends Component {
           </InputField>
           <br />
           <InputField>
-            <Button type='submit'>
-              Save
-            </Button>
+            {
+              loadingRequest ? <Spinner /> : (
+                <Button
+                  type='submit'
+                  onClick={handleOnSubmit}
+                  disabled={disabled || loadingRequest}
+                >
+                  Save
+                </Button>
+              )
+            }
+
           </InputField>
         </form>
 

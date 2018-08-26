@@ -2,7 +2,7 @@ import React from 'react'
 
 export default ({ children, ...props }) => {
   return (
-    <div className='Button' {...props}>
+    <button className='Button' {...props}>
       {children}
       <style jsx>{`
         .Button {
@@ -31,7 +31,15 @@ export default ({ children, ...props }) => {
           border: none;
           border-radius: 2px;
         }
+
+        .Button:hover {
+          background: rgb(47, 69, 193);
+        }
+
+        .Button:disabled {
+          background: rgb(138, 146, 187)
+        }
     `}</style>
-    </div>
+    </button>
   )
 }

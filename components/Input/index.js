@@ -287,7 +287,7 @@ Input.propTypes = {
   changed: PropTypes.func.isRequired,
   elementConfig: PropTypes.object.isRequired,
   touched: PropTypes.bool.isRequired,
-  invalid: PropTypes.bool,
+  invalid: PropTypes.string,
   placeholder: PropTypes.string,
   value: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,

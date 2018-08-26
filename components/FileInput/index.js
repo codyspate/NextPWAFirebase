@@ -4,7 +4,8 @@ import Button from '../Button';
 
 class FileInput extends Component {
   state = {
-    files: []
+    file: null,
+    picture: null
   }
 
   refInputFile = React.createRef()
@@ -25,43 +26,30 @@ class FileInput extends Component {
     imgExtension: ['.jpg', '.jpeg', '.gif', '.png']
   }
 
-  handlerOnDragOver = event => {
-    event.preventDefault();
-  };
+  handlerOnDragOver = event => event.preventDefault()
 
-  hasExtension = (name) => new RegExp('(' + this.props.imgExtension.join('|').replace(/\./g, '\\.') + ')$', 'i').test(name);
+  hasExtension = (name) => new RegExp('(' + this.props.imgExtension.join('|').replace(/\./g, '\\.') + ')$', 'i').test(name)
 
   handlerOnDrop = event => {
-    /*
-    * Prevent add repeat files to state and check the extension
-    * Add Files to State
-    */
     event.preventDefault();
 
-    const array_files = [];
-    const { hasExtension } = this
-
-    for (let i = 0; i < event.dataTransfer.files.length; i++) {
-      let file = event.dataTransfer.files[i];
-      if (!this.state.files.map((n) => n.name).includes(file.name) && hasExtension(file.name)) {
-        array_files.push(file);
+    this.onUploadSingleFile({
+      target: {
+        files: [event.dataTransfer.files[0]]
       }
-    }
-
-    this.setState({
-      files: [...this.state.files, ...array_files]
-    });
+    })
   };
 
-  removeFile = (index) => {
+  handleClear = () => {
     this.setState({
-      files: this.state.files.filter((_, i) => i !== index)
+      file: null,
+      picture: null
     });
+
+    this.props.onChange(null, null);
   };
 
-  onUploadClick(e) {
-    e.target.value = null;
-  }
+  onUploadClick = event => event.target.value = null;
 
   /*
   On button click, trigger input file to open
@@ -74,76 +62,106 @@ class FileInput extends Component {
   onUploadSingleFile = (e) => {
     const singleFile = e.target.files[0];
 
-    console.log(singleFile)
-
-    this.setState({
-      files: [...this.state.files, ...[singleFile]],
+    this.readFile(singleFile).then(newFileData => {
+      this.setState({ picture: newFileData.dataURL, file: newFileData.file }, () => {
+        this.props.onChange(this.state.picture, this.state.file);
+      });
     });
   }
 
-  /*
-  Handle file validation for severals files
-  */
-  onUploadSeveralFiles = (e) => {
-    const files = e.target.files;
-    const array_files = [];
 
-    // Iterate over all uploaded files
-    for (let i = 0; i < files.length; i++) {
-      let singleFile = files[i];
-      // Prevent upload repeat file
-      if (!this.state.files.map((n) => n.name).includes(singleFile.name)) {
-        array_files.push(singleFile);
-      }
-    }
+  readFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
 
-    this.setState({
-      files: [...this.state.files, ...array_files]
+      // Read the image via FileReader API and save image result in state.
+      reader.onload = function (e) {
+        // Add the file name to the data URL
+        let dataURL = e.target.result;
+        dataURL = dataURL.replace(";base64", `;name=${file.name};base64`);
+        resolve({ file, dataURL });
+      };
+
+      reader.readAsDataURL(file);
     });
   }
 
   render() {
-    const { triggerFileUpload, onUploadSingleFile, onUploadSeveralFiles, onUploadClick } = this
-
-    const { accept, name, singleImage, onChange } = this.props
+    const {
+      triggerFileUpload,
+      handlerOnDrop,
+      handlerOnDragOver,
+      onUploadSingleFile,
+      onUploadClick,
+      handleClear,
+      props: {
+        accept,
+        name
+      },
+      state: {
+        picture
+      },
+      refInputFile
+    } = this
 
     return (
       <div
         className="FileInput"
-        onDragOver={this.handlerOnDragOver}
-        onDrop={this.handlerOnDrop}
+        onDragOver={handlerOnDragOver}
+        onDrop={handlerOnDrop}
+        style={{
+          backgroundImage: picture ? `url('${picture}')` : 'unset'
+        }}
       >
-        <div>
-          <p>Drag & Drop</p>
-          <p>or</p>
-          <div>
-            <Button
-              blue
-              type='button'
-              onClick={triggerFileUpload}
-            >
-              Browse
-            </Button>
-            <input
-              type="file"
-              name={name}
-              ref={this.refInputFile}
-              multiple={singleImage}
-              onChange={singleImage ? onUploadSingleFile : onUploadSeveralFiles}
-              onClick={onUploadClick}
-              accept={accept}
-              hidden
-            />
-          </div>
-        </div>
+
+        {
+          !picture ? (
+            <div>
+              <p>Drag & Drop</p>
+              <p>or</p>
+              <div>
+                <Button
+                  type='button'
+                  onClick={triggerFileUpload}
+                >
+                  Browse
+                </Button>
+                <input
+                  type="file"
+                  name={name}
+                  ref={refInputFile}
+                  multiple={false}
+                  onChange={onUploadSingleFile}
+                  onClick={onUploadClick}
+                  accept={accept}
+                  hidden
+                />
+              </div>
+            </div>
+          ) : (
+              <div>
+                <div>
+                  <Button
+                    type='button'
+                    onClick={handleClear}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              </div>
+            )
+        }
+
         <style jsx>{`
           .FileInput {
             border: dashed 2px white;
-            width: 219px;
-            height: 160px;
+            width: 100%;
+            height: 200px;
             display: flex;
             justify-content: center;
-            align-items: center
+            align-items: center;
+            background-position: center center;
+            background-size: cover;
           }
           
           .FileInput > div {

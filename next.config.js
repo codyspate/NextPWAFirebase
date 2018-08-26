@@ -1,11 +1,4 @@
-const withOffline = require('next-offline')
-var path = require('path');
-
-module.exports = withOffline({
-    generateSw: false,
-    workboxOpts: {
-        swSrc: path.join('worker', 'service-worker.js')
-    },
+module.exports = {
     webpack: (config) => {
         // Fixes npm packages that depend on `fs` module
         config.node = {
@@ -14,4 +7,4 @@ module.exports = withOffline({
 
         return config
     }
-})
+}

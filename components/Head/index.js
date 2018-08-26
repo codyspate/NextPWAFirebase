@@ -1,89 +1,110 @@
+import React, { Component } from 'react'
 import NextHead from 'next/head'
-import { string } from 'prop-types'
 
 const defaultDescription = ''
 const defaultOGURL = ''
 const defaultOGImage = ''
 
-const Head = (props) => (
-  <NextHead>
 
-    <meta charSet="UTF-8" />
+export default class Head extends Component {
+  componentDidMount = () => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(function () {
+          console.log('Service worker registered!');
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    }
+  }
 
-    <title>{props.title || ''}</title>
+  render() {
+    const { props } = this
+    return (
+      <React.Fragment>
 
-    <meta name="description" content={props.description || defaultDescription} />
+        <NextHead>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta charSet="UTF-8" />
 
-    <link rel="icon" sizes="192x192" href="/static/touch-icon.png" />
+          <title>{props.title || ''}</title>
 
-    <link rel="apple-touch-icon" href="/static/touch-icon.png" />
+          <meta name="description" content={props.description || defaultDescription} />
 
-    <link rel="mask-icon" href="/static/favicon-mask.svg" color="#49B882" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" href="/static/favicon.ico" />
+          <link rel="icon" sizes="192x192" href="/static/touch-icon.png" />
 
-    <meta property="og:url" content={props.url || defaultOGURL} />
+          <link rel="apple-touch-icon" href="/static/touch-icon.png" />
 
-    <meta property="og:title" content={props.title || ''} />
+          <link rel="mask-icon" href="/static/favicon-mask.svg" color="#49B882" />
 
-    <meta property="og:description" content={props.description || defaultDescription} />
+          <link rel="icon" href="/static/favicon.ico" />
 
-    <meta name="twitter:site" content={props.url || defaultOGURL} />
+          <meta property="og:url" content={props.url || defaultOGURL} />
 
-    <meta name="twitter:card" content="summary_large_image" />
+          <meta property="og:title" content={props.title || ''} />
 
-    <meta name="twitter:image" content={props.ogImage || defaultOGImage} />
+          <meta property="og:description" content={props.description || defaultDescription} />
 
-    <meta property="og:image" content={props.ogImage || defaultOGImage} />
+          <meta name="twitter:site" content={props.url || defaultOGURL} />
 
-    <meta property="og:image:width" content="1200" />
+          <meta name="twitter:card" content="summary_large_image" />
 
-    <meta property="og:image:height" content="630" />
+          <meta name="twitter:image" content={props.ogImage || defaultOGImage} />
 
-    <link rel="manifest" href="static/manifest.json" />
+          <meta property="og:image" content={props.ogImage || defaultOGImage} />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta property="og:image:width" content="1200" />
 
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+          <meta property="og:image:height" content="630" />
 
-    <meta name="apple-mobile-web-app-title" content="PWAGram" />
+          <link rel="manifest" href="static/manifest.json" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-57x57.png" sizes="57x57" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-60x60.png" sizes="60x60" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-72x72.png" sizes="72x72" />
+          <meta name="apple-mobile-web-app-title" content="PWAGram" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-76x76.png" sizes="76x76" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-57x57.png" sizes="57x57" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-114x114.png" sizes="114x114" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-60x60.png" sizes="60x60" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-120x120.png" sizes="120x120" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-72x72.png" sizes="72x72" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-144x144.png" sizes="144x144" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-76x76.png" sizes="76x76" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-152x152.png" sizes="152x152" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-114x114.png" sizes="114x114" />
 
-    <link rel="apple-touch-icon" href="static/icons/apple-icon-180x180.png" sizes="180x180" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-120x120.png" sizes="120x120" />
 
-    <meta name="msapplication-TileImage" content="static/icons/app-icon-144x144.png" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-144x144.png" sizes="144x144" />
 
-    <meta name="msapplication-TileColor" content="#fff" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-152x152.png" sizes="152x152" />
 
-    <meta name="theme-color" content="#3f51b5" />
+          <link rel="apple-touch-icon" href="static/icons/apple-icon-180x180.png" sizes="180x180" />
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400" rel="stylesheet" />
+          <meta name="msapplication-TileImage" content="static/icons/app-icon-144x144.png" />
 
-  </NextHead>
-)
+          <meta name="msapplication-TileColor" content="#fff" />
 
-Head.propTypes = {
-  title: string,
-  description: string,
-  url: string,
-  ogImage: string
+          <meta name="theme-color" content="#3f51b5" />
+
+          <link href="https://fonts.googleapis.com/css?family=Raleway:400" rel="stylesheet" />
+
+        </NextHead>
+
+        <style jsx global>{`
+          body { 
+            margin: 0;
+            padding: 0;
+          }
+        `}</style>
+
+      </React.Fragment>
+    )
+  }
 }
-
-export default Head

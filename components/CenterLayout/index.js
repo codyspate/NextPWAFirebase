@@ -11,6 +11,7 @@ const CenterLayout = ({
 
       <style jsx>{`
         .CenterLayout {
+          min-height: 100vh;
           display: flex;
           background-color: #009688;
           align-items: center;

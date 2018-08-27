@@ -1,9 +1,7 @@
-importScripts('/workbox-sw.js');
-importScripts('/workbox-background-sync.js');
-importScripts('/workbox-strategies.js');
-importScripts('/workbox-routing.js');
-importScripts('/idb.js');
-importScripts('/utility.js');
+importScripts('workbox-sw.js');
+importScripts('workbox-background-sync.js');
+importScripts('workbox-strategies.js');
+importScripts('workbox-routing.js');
 
 const bgSyncPlugin = new workbox.backgroundSync.Plugin('myQueueName', {
   maxRetentionTime: 24 * 60 // Retry for max of 24 Hours
@@ -71,3 +69,58 @@ const PRECACHE_ROUTES = [
 ]
 
 workbox.precaching.precacheAndRoute(PRECACHE_ROUTES);
+
+self.addEventListener('push', function (event) {
+  console.log('Push Notification received', event);
+
+  const img = 'static/icons/app-icon-96x96.png'
+
+  let data = { title: 'New!', content: 'Something new happened!', openUrl: '/' };
+
+  if (event.data) {
+    data = JSON.parse(event.data.text());
+  }
+
+  var options = {
+    body: data.content,
+    icon: img,
+    badge: img,
+    data: {
+      url: data.openUrl
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+self.addEventListener('notificationclick', function (event) {
+  var notification = event.notification;
+  var action = event.action;
+
+  console.log(notification);
+
+  if (action === 'confirm') {
+    console.log('Confirm was chosen');
+    notification.close();
+  } else {
+    console.log(action);
+    event.waitUntil(
+      clients.matchAll()
+        .then(function (clis) {
+          var client = clis.find(function (c) {
+            return c.visibilityState === 'visible';
+          });
+
+          if (client !== undefined) {
+            client.navigate(notification.data.url);
+            client.focus();
+          } else {
+            clients.openWindow(notification.data.url);
+          }
+          notification.close();
+        })
+    );
+  }
+});

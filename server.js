@@ -32,14 +32,6 @@ app.prepare().then(() => {
       res.setHeader('content-type', 'text/javascript');
       createReadStream('./worker/workbox-background-sync.js').pipe(res);
     }
-    else if (pathname === '/idb.js') {
-      res.setHeader('content-type', 'text/javascript');
-      createReadStream('./utils/idb.js').pipe(res);
-    }
-    else if (pathname === '/utility.js') {
-      res.setHeader('content-type', 'text/javascript');
-      createReadStream('./utils/utility.js').pipe(res);
-    }
     else {
       handle(req, res, parsedUrl);
     }

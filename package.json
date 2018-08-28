@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "latest",
-    "next": "latest",
+    "next": "6.1.1",
     "react": "latest",
     "react-dom": "latest",
     "react-webcam": "latest"

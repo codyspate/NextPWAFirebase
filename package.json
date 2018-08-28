@@ -1,5 +1,5 @@
 {
-  "name": "create-next-example-app",
+  "name": "next-pwa-firebase",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "latest",
-    "next": "6.1.1",
+    "next": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-webcam": "latest"

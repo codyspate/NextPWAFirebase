@@ -1,7 +1,4 @@
 importScripts('workbox-sw.js');
-importScripts('workbox-background-sync.js');
-importScripts('workbox-strategies.js');
-importScripts('workbox-routing.js');
 
 const bgSyncPlugin = new workbox.backgroundSync.Plugin('myQueueName', {
   maxRetentionTime: 24 * 60 // Retry for max of 24 Hours

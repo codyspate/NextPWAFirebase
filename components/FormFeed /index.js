@@ -72,10 +72,12 @@ export class FormFeed extends Component {
         this.setState({ lat: position.coords.longitude, lng: position.coords.latitude })
         reverseGeocoding(position.coords.latitude, position.coords.longitude)
           .then(res => {
+            console.log(res)
             if (res.status === 200 && res.data.status === 'OK'
               && 'results' in res.data && res.data.results.length) {
               const formatted_address = res.data.results[0].formatted_address // 7277 Bedford Avenue, Brooklyn, NY 11211, USA
-              this.inputChanged({
+              console.log(formatted_address)
+              this.handleChange({
                 target: {
                   value: formatted_address
                 }

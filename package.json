@@ -4,7 +4,7 @@
     "dev": "node server.js",
     "build": "next build",
     "local-start": "NODE_ENV=production node server.js",
-    "start": "next start -p $PORT",
+    "start": "NODE_ENV=production node server.js",
     "heroku-postbuild": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,25 +1,11 @@
 import React, { Component } from 'react'
 import NextHead from 'next/head'
 
-const defaultDescription = ''
-const defaultOGURL = ''
-const defaultOGImage = ''
-
+const defaultDescription = 'PWA App to share photo with the world'
+const defaultOGURL = 'https://ecomerce-challenge.herokuapp.com/'
+const defaultOGImage = 'https://ecomerce-challenge.herokuapp.com/static/icons/apple-icon-180x180.png'
 
 export default class Head extends Component {
-  componentDidMount = () => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then(function () {
-          console.log('Service worker registered!');
-        })
-        .catch(function (err) {
-          console.log(err);
-        });
-    }
-  }
-
   render() {
     const { props } = this
     return (
@@ -98,7 +84,7 @@ export default class Head extends Component {
         </NextHead>
 
         <style jsx global>{`
-          body { 
+          body {
             margin: 0;
             padding: 0;
           }

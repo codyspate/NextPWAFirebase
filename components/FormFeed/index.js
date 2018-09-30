@@ -211,8 +211,8 @@ class FormFeed extends Component {
                       :
                       <Webcam
                         audio={false}
-                        height={350}
-                        width={640}
+                        height={'auto'}
+                        width={'100%'}
                         ref={this.camera}
                         screenshotFormat="image/jpeg"
                         videoConstraints={this.videoConstraints}
@@ -285,7 +285,7 @@ class FormFeed extends Component {
 
         <style jsx>{`
           .FormFeed {
-            padding: 2rem 0
+            padding: 2rem 1rem
           }
         `}</style>
       </React.Fragment>

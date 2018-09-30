@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import CenterLayout from '../components/CenterLayout'
 import LinkToHome from '../components/LinkToHome'
 import ActiveNotificationButton from '../components/ActiveNotificationButton';
-import { FormFeed } from '../components/FormFeed ';
+import FormFeed from '../components/FormFeed';
 
 export default class extends Component {
   render() {

@@ -10,8 +10,9 @@ import reverseGeocoding from '../../utils/reverseGeocoding';
 import axios from 'axios';
 import FileInput from '../FileInput';
 import dataURItoBlob from '../../utils/dataURItoBlob';
+import Image from '../Image';
 
-export class FormFeed extends Component {
+class FormFeed extends Component {
   constructor(props) {
     super(props)
 
@@ -122,8 +123,8 @@ export class FormFeed extends Component {
       const id = new Date().toISOString();
       const file =
         typeof this.state.file === "string" ?
-        dataURItoBlob(this.state.file) : 
-        this.state.file;
+          dataURItoBlob(this.state.file) :
+          this.state.file;
       const FormDataFeed = new FormData();
 
       FormDataFeed.append('id', id);
@@ -206,21 +207,17 @@ export class FormFeed extends Component {
                 <InputField>
                   {
                     file ?
-                    <img
-                      src={file}
-                      height={350}
-                      width={640}
-                    />
-                    :
-                    <Webcam
-                      audio={false}
-                      height={350}
-                      width={640}
-                      ref={this.camera}
-                      screenshotFormat="image/jpeg"
-                      videoConstraints={this.videoConstraints}
-                      onUserMediaError={handleFallbackCameraFail}
-                    />
+                      <Image src={file} alt='Preview Image' />
+                      :
+                      <Webcam
+                        audio={false}
+                        height={350}
+                        width={640}
+                        ref={this.camera}
+                        screenshotFormat="image/jpeg"
+                        videoConstraints={this.videoConstraints}
+                        onUserMediaError={handleFallbackCameraFail}
+                      />
                   }
                 </InputField>
               )
